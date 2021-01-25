@@ -1,4 +1,5 @@
 CXXw = x86_64-w64-mingw32-gcc
+WRES = x86_64-w64-mingw32-winres
 CXX = gcc
 
 default:
@@ -11,4 +12,7 @@ main-linux: main.c
 
 win: main-win
 main-win: main.c
-	$(CXXw) -o main main.c
+	$(CXXw) -o main main.c main.res
+
+icon:
+	$(WRES) main.rc -O coff -o main.res
