@@ -4,4 +4,6 @@ This program disables ScriptHookV (ScriptHookV.dll) and the ASI loader included 
 
 Just input the directory were GTA was installed and it automaticaly detects if ScriptHookV is enabled or disabled and allows you to toggle it's state.
 
+To automate the input of the directory, create a shortcut on your desktop that runs the program followed by the install directory.
+
 Further updates will add more functionality to the program...

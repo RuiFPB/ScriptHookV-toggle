@@ -52,7 +52,7 @@ void scopy(char s1[], char s2[], int mode){
 Verifica se os ficheiros existem
 */
 int status(char path[]){
-    printf("Now checking :%s \n", path);
+    //printf("Now checking :%s \n", path);
     if (access (path, F_OK) == 0){
         return 1; // ScriptHook is enabled
     } else {
@@ -242,9 +242,8 @@ int main(int argc, char **argv){
 
     if (argc > 1) {
         scopy(argv[1], installdir, 1);
+        printf("%s\n", installdir);
     }
-
-    printf("%s\n", installdir);
 
     printf("WARNING: This program should not be run when the game is running!\nThe program is delivered \"as is\" and any missuse is the user's fault!\n");
     waitenter();
@@ -282,7 +281,7 @@ int main(int argc, char **argv){
             strcat(pathtofile, file1);
 
             // Verificar se o ficheiro existe. Se sim em que estado
-            printf("file to check: %s\n", pathtofile);
+            //printf("file to check: %s\n", pathtofile);
             j = status(pathtofile);
             switch (j){
             //ficheiro ativado
