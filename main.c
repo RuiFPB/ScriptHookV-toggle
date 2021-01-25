@@ -160,8 +160,11 @@ int main(){
         printf("ScriptHookV toggler\n1. Check ScriptHook\n\n9. About\n0. Quit\n : ");
         fgets(inpt, STR_SIZE, stdin); opc = atoi(inpt);
 
-        switch (opc)
-        {
+        switch (opc){
+        // Sair
+        case 0:
+            end = 1;
+            break;
         case 1:
             if (installdir[0] == '\0') { // Se o diretório do jogo ainda não foi definido
                 printf("Where is GTA V installed? : ");
@@ -200,6 +203,7 @@ int main(){
                     fgets(inpt, STR_SIZE, stdin);
                     if ((inpt[0] == 'y') || (inpt[0] == 'Y'))
                         disable(installdir, 3);
+                    else opc = 0;
                     break;
                 case 0: 
                     printf("ScriptHookV is enabled but dinput8.dll is disabled, both will be disabled!\n");
@@ -225,6 +229,7 @@ int main(){
                     fgets(inpt, STR_SIZE, stdin);
                     if ((inpt[0] == 'y') || (inpt[0] == 'Y'))
                         enable(installdir, 3);
+                    else opc = 0;
                     break;
                 }
                 break;
@@ -238,10 +243,6 @@ int main(){
             printf("This program disables ScriptHookV.dll and the asi loader included with ScriptHook (dinput8.dll) to enable you to play GTA-Online.\n");
             printf("If you want to play GTAV with your scripts back, the same program is used to enable it back.\n");
             printf("No files get deleted, ScriptHookV.dll and dinput8.dll get _disabled added to the file extension, so they are not loaded by the game, and then get renamed back to their original state if you toggle it again.\n");
-            break;
-        // Sair
-        case 0:
-            end = 1;
             break;
         default:
             printf("That's not an option!\n");
