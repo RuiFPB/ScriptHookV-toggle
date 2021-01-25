@@ -76,26 +76,62 @@ void enable(char path[], int n){
     {
     case 1:
         scopy(base, command);
+
         scopy(installdir, pathtofile);
         strcat(pathtofile, file1);
+
         scopy(pathtofile, npathtofile);
         strcat(npathtofile, disabler);
+
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
         strcat(command, npathtofile);
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
+
         command[strlen(command)] = ' ';
+        
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
         strcat(command, pathtofile);
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
+        
         printf("%s\n", command);
         system(command);
         printf("ScriptHookV was enabled!\n\n");
         break;
     case 2:
         scopy(base, command);
+        
         scopy(installdir, pathtofile);
         strcat(pathtofile, file2);
+        
         scopy(pathtofile, npathtofile);
         strcat(npathtofile, disabler);
+        
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
         strcat(command, npathtofile);
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
+        
         command[strlen(command)] = ' ';
+        
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
         strcat(command, pathtofile);
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
+        
         printf("%s\n", command);
         system(command);
         printf("dinput8 was enabled!\n");
@@ -116,26 +152,62 @@ void disable(char path[], int n){
     {
     case 1:
         scopy(base, command);
+        
         scopy(installdir, pathtofile);
         strcat(pathtofile, file1);
+        
         scopy(pathtofile, npathtofile);
         strcat(npathtofile, disabler);
+        
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
         strcat(command, pathtofile);
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
+        
         command[strlen(command)] = ' ';
+        
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
         strcat(command, npathtofile);
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
+        
         printf("%s\n", command);
         system(command);
         printf("ScriptHookV was disabled!\n\n");
         break;
     case 2:
         scopy(base, command);
+        
         scopy(installdir, pathtofile);
         strcat(pathtofile, file2);
+        
         scopy(pathtofile, npathtofile);
         strcat(npathtofile, disabler);
+        
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
         strcat(command, pathtofile);
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
+        
         command[strlen(command)] = ' ';
+        
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
         strcat(command, npathtofile);
+        #ifdef _WIN32
+        command[strlen(command)] = '"';
+        #endif
+        
         printf("%s\n", command);
         system(command);
         printf("dinput8 was disabled!\n");
