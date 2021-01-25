@@ -27,10 +27,24 @@ int j = 0;
 
 /*
 Copia os conteúdos de s1 para s2
+mode 1 apenas copia até strlen(s1)
+qualquer outro mode copia até STR_SIZE 
 */
-void scopy(char s1[], char s2[]){
-    for (int i = 0; i < STR_SIZE; i++) {
-        s2[i] = s1[i];
+void scopy(char s1[], char s2[], int mode){
+    /* Funcionalidade mode foi acrescentada para corrigir um bug introduzido com a definição de installdir atravez de argv*/
+    switch (mode)
+    {
+    case 1:
+        for (int i = 0; i < strlen(s1); i++) {
+            s2[i] = s1[i];
+        }
+        break;
+    
+    default:
+        for (int i = 0; i < STR_SIZE; i++) {
+            s2[i] = s1[i];
+        }
+        break;
     }
 }
 
@@ -38,7 +52,7 @@ void scopy(char s1[], char s2[]){
 Verifica se os ficheiros existem
 */
 int status(char path[]){
-    // printf("Now checking :%s \n", path);
+    printf("Now checking :%s \n", path);
     if (access (path, F_OK) == 0){
         return 1; // ScriptHook is enabled
     } else {
@@ -75,12 +89,12 @@ void enable(char path[], int n){
     switch (n)
     {
     case 1:
-        scopy(base, command);
+        scopy(base, command, 2);
 
-        scopy(installdir, pathtofile);
+        scopy(installdir, pathtofile, 2);
         strcat(pathtofile, file1);
 
-        scopy(pathtofile, npathtofile);
+        scopy(pathtofile, npathtofile, 2);
         strcat(npathtofile, disabler);
 
         #ifdef _WIN32
@@ -106,12 +120,12 @@ void enable(char path[], int n){
         printf("ScriptHookV was enabled!\n\n");
         break;
     case 2:
-        scopy(base, command);
+        scopy(base, command, 2);
         
-        scopy(installdir, pathtofile);
+        scopy(installdir, pathtofile, 2);
         strcat(pathtofile, file2);
         
-        scopy(pathtofile, npathtofile);
+        scopy(pathtofile, npathtofile, 2);
         strcat(npathtofile, disabler);
         
         #ifdef _WIN32
@@ -151,12 +165,12 @@ void disable(char path[], int n){
     switch (n)
     {
     case 1:
-        scopy(base, command);
+        scopy(base, command, 2);
         
-        scopy(installdir, pathtofile);
+        scopy(installdir, pathtofile, 2);
         strcat(pathtofile, file1);
         
-        scopy(pathtofile, npathtofile);
+        scopy(pathtofile, npathtofile, 2);
         strcat(npathtofile, disabler);
         
         #ifdef _WIN32
@@ -182,12 +196,12 @@ void disable(char path[], int n){
         printf("ScriptHookV was disabled!\n\n");
         break;
     case 2:
-        scopy(base, command);
+        scopy(base, command, 2);
         
-        scopy(installdir, pathtofile);
+        scopy(installdir, pathtofile, 2);
         strcat(pathtofile, file2);
         
-        scopy(pathtofile, npathtofile);
+        scopy(pathtofile, npathtofile, 2);
         strcat(npathtofile, disabler);
         
         #ifdef _WIN32
@@ -221,15 +235,22 @@ void disable(char path[], int n){
 }
 
 // Função principal
-int main(){
+int main(int argc, char **argv){
     #ifdef _WIN32
     SetConsoleOutputCP(65001); // Sets the codepage to utf_8 on windows 
     #endif
+
+    if (argc > 1) {
+        scopy(argv[1], installdir, 1);
+    }
+
+    printf("%s\n", installdir);
+
     printf("WARNING: This program should not be run when the game is running!\nThe program is delivered \"as is\" and any missuse is the user's fault!\n");
     waitenter();
     while (!end) {
         clrscr(); 
-        printf("ScriptHookV toggler\n1. Check ScriptHook\n\n9. About\n0. Quit\n : ");
+        printf("ScriptHookV toggler\n\n1. Check ScriptHook\n\n9. About\n0. Quit\n\n: ");
         fgets(inpt, STR_SIZE, stdin); opc = atoi(inpt);
 
         switch (opc){
@@ -237,6 +258,8 @@ int main(){
         case 0:
             end = 1;
             break;
+        
+        // Verificação ScriptHook
         case 1:
             if (installdir[0] == '\0') { // Se o diretório do jogo ainda não foi definido
                 printf("Where is GTA V installed? : ");
@@ -244,27 +267,27 @@ int main(){
                 // remove \n do final do caminho
                 if (installdir[strlen (installdir) - 1] == '\n')
                     installdir[strlen (installdir) - 1] = '\0';
-                // se o caminho não teminar com \ ou / (dependendo do OS) acrescentar o carecter ao caminho
-                #ifdef _WIN32
-                if (installdir[strlen(installdir) - 1] != '\\')
-                    installdir[strlen(installdir)] = '\\';
-                #else
-                if (installdir[strlen(installdir) - 1] != '/')
-                    installdir[strlen(installdir)] = '/';
-                #endif
             }
+            // se o caminho não teminar com \ ou / (dependendo do OS) acrescentar o carecter ao caminho
+            #ifdef _WIN32
+            if (installdir[strlen(installdir) - 1] != '\\')
+                installdir[strlen(installdir)] = '\\';
+            #else
+            if (installdir[strlen(installdir) - 1] != '/') // caracter 47 = '/'
+                installdir[strlen(installdir)] = '/';
+            #endif
 
             // gerar o caminho para ScriptHookV.dll
-            scopy(installdir, pathtofile);
+            scopy(installdir, pathtofile, 2);
             strcat(pathtofile, file1);
 
             // Verificar se o ficheiro existe. Se sim em que estado
-            // printf("file to check: %s\n", pathtofile);
+            printf("file to check: %s\n", pathtofile);
             j = status(pathtofile);
             switch (j){
             //ficheiro ativado
             case 1:
-                scopy(installdir, pathtofile);
+                scopy(installdir, pathtofile, 2);
                 strcat(pathtofile, file2);
                 // printf("file to check2: %s\n", pathtofile);
                 j = status(pathtofile);
@@ -286,7 +309,7 @@ int main(){
 
             // ficheiro desativado
             case 0: 
-                scopy(installdir, pathtofile);
+                scopy(installdir, pathtofile, 2);
                 strcat(pathtofile, file2);
                 // printf("file to check2: %s\n", pathtofile);
                 j = status(pathtofile);
@@ -306,7 +329,7 @@ int main(){
                 }
                 break;
             case 2:
-                printf("ScriptHook.dll is not in the path specified!\n");
+                printf("ScriptHookV.dll is not in the path specified!\n");
                 break;
             }
             break;
