@@ -1,28 +1,40 @@
+// Programa que troca o estado 
+// do ScriptHook.dll e do 
+// dinput8.dll para que seja
+// possível jogar online
+// ou offline sem mods no GTA V
+//
+// Programado por: Rui Barbosa
+// 31 Jan
+
 #include <stdio.h> 
 #include <stdlib.h>
 #include <string.h> // strcat() e strlen();
 #include <unistd.h> // access() for the file check
+
 #ifdef _WIN32
 #include <windows.h> //SetConsoleOutputCP
 #endif
 
-#define STR_SIZE 300 // O tamanho é ligeiramente exagerado, mas não deve de ser problema tendo em conta que para jogar GTAV é necessário 8GB ou mais de memória.
+#define STR_SIZE 300 //Tamanho padrão das strings. O tamanho é ligeiramente exagerado mas assim asseguro que não exista erros mesmo quando o caminho para a instalação do jogo é mais longo.
+		     //Caso seja necessário mais caracteres para que o comando possa ser executado, apenas este valor terá que ser modificado.
 
 #ifdef _WIN32
 char base[STR_SIZE] = "move ";
 #else
 char base[STR_SIZE] = "mv ";
 #endif
+
 char installdir[STR_SIZE] = "";
 char pathtofile[STR_SIZE] = "";
 char npathtofile[STR_SIZE] = "";
-char command[STR_SIZE] = "mv ";
+char command[STR_SIZE] = "";
 char file2[12] = "dinput8.dll";
 char file1[16] = "ScriptHookV.dll";
 char disabler[9] = "_disable";
 int opc = 0;
 char inpt[STR_SIZE];
-int end = { 0 };
+int end = 0;
 int j = 0;
 
 /*
@@ -97,23 +109,15 @@ void enable(char path[], int n){
         scopy(pathtofile, npathtofile, 2);
         strcat(npathtofile, disabler);
 
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         strcat(command, npathtofile);
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
 
         command[strlen(command)] = ' ';
         
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         strcat(command, pathtofile);
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         
         printf("%s\n", command);
         system(command);
@@ -128,23 +132,15 @@ void enable(char path[], int n){
         scopy(pathtofile, npathtofile, 2);
         strcat(npathtofile, disabler);
         
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         strcat(command, npathtofile);
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         
         command[strlen(command)] = ' ';
         
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         strcat(command, pathtofile);
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         
         printf("%s\n", command);
         system(command);
@@ -173,23 +169,15 @@ void disable(char path[], int n){
         scopy(pathtofile, npathtofile, 2);
         strcat(npathtofile, disabler);
         
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         strcat(command, pathtofile);
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         
         command[strlen(command)] = ' ';
         
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         strcat(command, npathtofile);
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         
         printf("%s\n", command);
         system(command);
@@ -204,23 +192,15 @@ void disable(char path[], int n){
         scopy(pathtofile, npathtofile, 2);
         strcat(npathtofile, disabler);
         
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         strcat(command, pathtofile);
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         
         command[strlen(command)] = ' ';
         
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         strcat(command, npathtofile);
-        #ifdef _WIN32
         command[strlen(command)] = '"';
-        #endif
         
         printf("%s\n", command);
         system(command);
@@ -246,10 +226,11 @@ int main(int argc, char **argv){
     }
 
     printf("WARNING: This program should not be run when the game is running!\nThe program is delivered \"as is\" and any missuse is the user's fault!\n");
+    printf("Press ENTER to continue...");
     waitenter();
     while (!end) {
         clrscr(); 
-        printf("ScriptHookV toggler\n\n1. Check ScriptHook\n\n9. About\n0. Quit\n\n: ");
+        printf("ScriptHookV toggler\n\n1. Check ScriptHookV\n\n9. About\n0. Quit\n\n: ");
         fgets(inpt, STR_SIZE, stdin); opc = atoi(inpt);
 
         switch (opc){
@@ -303,6 +284,9 @@ int main(int argc, char **argv){
                     printf("ScriptHookV is enabled but dinput8.dll is disabled, both will be disabled!\n");
                     disable(installdir, 1);
                     break;
+		case 2:
+		    printf("dinput8.dll or dinput8.dll_disabled were not found. Check your ScriptHookV intalation!\n");
+		    break;
                 }
                 break;
 
@@ -325,10 +309,15 @@ int main(int argc, char **argv){
                         enable(installdir, 3);
                     else opc = 0;
                     break;
+		case 2:
+		    printf("dinput8.dll or dinput8.dll_disabled were not found. Check your ScriptHookV instalation!\n");
+		    break;
                 }
                 break;
+            // Os ficheiros não foram encontrados
             case 2:
                 printf("ScriptHookV.dll is not in the path specified!\n");
+		printf("Verify if the path is correct. If the path as spaces like \"Steam Library\" add quotes to begining and the end of the path (\".../.../GTAV\")\n");
                 break;
             }
             break;
@@ -345,5 +334,5 @@ int main(int argc, char **argv){
 
         if (opc != 0) waitenter();
     }
-    printf("Goodbye!\n");    
+    printf("Goodbye!\n");
 }
