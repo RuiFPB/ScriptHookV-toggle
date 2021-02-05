@@ -8,11 +8,11 @@ default:
 
 linux: main-linux
 main-linux: main.c
-	$(CXX) -o main main.c
+	$(CXX) -o main main.c -O2
 
 win: main-win
 main-win: main.c
-	$(CXXw) -o main main.c main.res
+	$(CXXw) -o main main.c main.res -O2
 
 icon:
 	$(WRES) main.rc -O coff -o main.res
