@@ -94,124 +94,52 @@ void waitenter(){
     while(getchar() != '\n');
 }
 
-/*
-Ativa o ScriptHookV.dll e dinput8.dll
-*/
-void enable(char path[], int n){
-    switch (n)
-    {
-    case 1:
-        scopy(base, command, 2);
+// Desativa ou ativa ficheiro
+// 2 Ativa
+// 1 Desativa
+void toggle(char file[], int mode){
+	scopy(base, command, 2);
 
-        scopy(installdir, pathtofile, 2);
-        strcat(pathtofile, file1);
+	scopy(installdir, pathtofile, 2);
+	strcat(pathtofile, file);
 
-        scopy(pathtofile, npathtofile, 2);
-        strcat(npathtofile, disabler);
+	scopy(pathtofile, npathtofile, 2);
+	strcat(npathtofile, disabler);
 
-        command[strlen(command)] = '"';
-        strcat(command, npathtofile);
-        command[strlen(command)] = '"';
+	switch(mode){
+		case 1:		// Desativar
+			command[strlen(command)] = '"';
+			strcat(command, pathtofile);
+			command[strlen(command)] = '"';
 
-        command[strlen(command)] = ' ';
-        
-        command[strlen(command)] = '"';
-        strcat(command, pathtofile);
-        command[strlen(command)] = '"';
-        
-        printf("%s\n", command);
-        system(command);
-        printf("ScriptHookV was enabled!\n\n");
-        break;
-    case 2:
-        scopy(base, command, 2);
-        
-        scopy(installdir, pathtofile, 2);
-        strcat(pathtofile, file2);
-        
-        scopy(pathtofile, npathtofile, 2);
-        strcat(npathtofile, disabler);
-        
-        command[strlen(command)] = '"';
-        strcat(command, npathtofile);
-        command[strlen(command)] = '"';
-        
-        command[strlen(command)] = ' ';
-        
-        command[strlen(command)] = '"';
-        strcat(command, pathtofile);
-        command[strlen(command)] = '"';
-        
-        printf("%s\n", command);
-        system(command);
-        printf("dinput8 was enabled!\n");
-        break;
-    default:
-        enable(path, 1);
-        enable(path, 2);
-        break;
-    }
-    ;
-}
+			command[strlen(command)] = ' ';
 
-/*
-Desativa o ScriptHookV.dll e dinput8.dll
-*/
-void disable(char path[], int n){
-    switch (n)
-    {
-    case 1:
-        scopy(base, command, 2);
-        
-        scopy(installdir, pathtofile, 2);
-        strcat(pathtofile, file1);
-        
-        scopy(pathtofile, npathtofile, 2);
-        strcat(npathtofile, disabler);
-        
-        command[strlen(command)] = '"';
-        strcat(command, pathtofile);
-        command[strlen(command)] = '"';
-        
-        command[strlen(command)] = ' ';
-        
-        command[strlen(command)] = '"';
-        strcat(command, npathtofile);
-        command[strlen(command)] = '"';
-        
-        printf("%s\n", command);
-        system(command);
-        printf("ScriptHookV was disabled!\n\n");
-        break;
-    case 2:
-        scopy(base, command, 2);
-        
-        scopy(installdir, pathtofile, 2);
-        strcat(pathtofile, file2);
-        
-        scopy(pathtofile, npathtofile, 2);
-        strcat(npathtofile, disabler);
-        
-        command[strlen(command)] = '"';
-        strcat(command, pathtofile);
-        command[strlen(command)] = '"';
-        
-        command[strlen(command)] = ' ';
-        
-        command[strlen(command)] = '"';
-        strcat(command, npathtofile);
-        command[strlen(command)] = '"';
-        
-        printf("%s\n", command);
-        system(command);
-        printf("dinput8 was disabled!\n");
-        break;
-    default:
-        disable(path, 1);
-        disable(path, 2);
-        break;
-    }
-    
+			command[strlen(command)] = '"';
+			strcat(command, npathtofile);
+			command[strlen(command)] = '"';
+
+			printf("> %s\n", command);
+			system(command);
+			printf("%s was disabled.\n", file);
+			break;
+		case 2:		// Ativar
+			command[strlen(command)] = '"';
+			strcat(command, npathtofile);
+			command[strlen(command)] = '"';
+
+			command[strlen(command)] = ' ';
+
+			command[strlen(command)] = '"';
+			strcat(command, pathtofile);
+			command[strlen(command)] = '"';
+
+			printf("> %s\n", command);
+			system(command);
+			printf("%s was enabled.\n", file);
+			break;
+		default:	// NADA, ABSOLUTAMENTE NADA
+			break;
+	}
 }
 
 // Função principal
@@ -224,7 +152,7 @@ int main(int argc, char **argv){
         scopy(argv[1], installdir, 1);
         printf("%s\n", installdir);
     }
-
+    
     printf("WARNING: This program should not be run when the game is running!\nThe program is delivered \"as is\" and any missuse is the user's fault!\n");
     printf("Press ENTER to continue...");
     waitenter();
@@ -276,13 +204,15 @@ int main(int argc, char **argv){
                     printf("ScriptHookV is enabled!\n");
                     printf("Toggle? [y/n]\n: ");
                     fgets(inpt, STR_SIZE, stdin);
-                    if ((inpt[0] == 'y') || (inpt[0] == 'Y'))
-                        disable(installdir, 3);
+                    if ((inpt[0] == 'y') || (inpt[0] == 'Y')){
+                        toggle(file1, 1);
+		    	toggle(file2, 1);
+		    }
                     else opc = 0;
                     break;
                 case 0: 
                     printf("ScriptHookV is enabled but dinput8.dll is disabled, both will be disabled!\n");
-                    disable(installdir, 1);
+                    toggle(file1, 1);
                     break;
 		case 2:
 		    printf("dinput8.dll or dinput8.dll_disabled were not found. Check your ScriptHookV intalation!\n");
@@ -299,14 +229,16 @@ int main(int argc, char **argv){
                 switch (j){
                 case 1:
                     printf("ScriptHookV is disabled but dinput8.dll is enabled, both will be disabled!\n");
-                    disable(installdir, 2);
+		    toggle(file2, 1);
                     break;
                 case 0: 
                     printf("ScriptHookV is disabled!\n");
                     printf("Toggle? [y/n]\n: ");
                     fgets(inpt, STR_SIZE, stdin);
-                    if ((inpt[0] == 'y') || (inpt[0] == 'Y'))
-                        enable(installdir, 3);
+                    if ((inpt[0] == 'y') || (inpt[0] == 'Y')){
+			toggle(file1, 2);
+			toggle(file2, 2);
+		    }
                     else opc = 0;
                     break;
 		case 2:
