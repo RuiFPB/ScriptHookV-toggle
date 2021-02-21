@@ -206,17 +206,17 @@ int main(int argc, char **argv){
                     fgets(inpt, STR_SIZE, stdin);
                     if ((inpt[0] == 'y') || (inpt[0] == 'Y')){
                         toggle(file1, 1);
-		    	toggle(file2, 1);
-		    }
+		            	toggle(file2, 1);
+		            }
                     else opc = 0;
                     break;
                 case 0: 
                     printf("ScriptHookV is enabled but dinput8.dll is disabled, both will be disabled!\n");
                     toggle(file1, 1);
                     break;
-		case 2:
-		    printf("dinput8.dll or dinput8.dll_disabled were not found. Check your ScriptHookV intalation!\n");
-		    break;
+	    	    case 2:
+		            printf("dinput8.dll or dinput8.dll_disabled were not found. Check your ScriptHookV intalation!\n");
+		            break;
                 }
                 break;
 
@@ -229,27 +229,28 @@ int main(int argc, char **argv){
                 switch (j){
                 case 1:
                     printf("ScriptHookV is disabled but dinput8.dll is enabled, both will be disabled!\n");
-		    toggle(file2, 1);
+		            toggle(file2, 1);
                     break;
                 case 0: 
                     printf("ScriptHookV is disabled!\n");
                     printf("Toggle? [y/n]\n: ");
                     fgets(inpt, STR_SIZE, stdin);
                     if ((inpt[0] == 'y') || (inpt[0] == 'Y')){
-			toggle(file1, 2);
-			toggle(file2, 2);
-		    }
+			            toggle(file1, 2);
+			            toggle(file2, 2);
+		            }
                     else opc = 0;
                     break;
-		case 2:
-		    printf("dinput8.dll or dinput8.dll_disabled were not found. Check your ScriptHookV instalation!\n");
-		    break;
+		        case 2:
+		            printf("dinput8.dll or dinput8.dll_disabled were not found. Check your ScriptHookV instalation!\n");
+		            break;
                 }
                 break;
             // Os ficheiros não foram encontrados
             case 2:
                 printf("ScriptHookV.dll is not in the path specified!\n");
-		printf("Verify if the path is correct. If the path as spaces like \"Steam Library\" add quotes to begining and the end of the path (\".../.../GTAV\")\n");
+		        printf("Verify if the path is correct. If the path as spaces like \"Steam Library\" add quotes to begining and the end of the path (\".../.../GTAV\")\n");
+                printf("If the path is correct verify if the files are on the correct place\n");
                 break;
             }
             break;
