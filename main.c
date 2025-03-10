@@ -91,7 +91,7 @@ void waitenter(){
 // 2 Ativa
 // 1 Desativa
 void toggle(char file[], int mode){
-	scopy(base, command, 2);
+	scopy(base, command, 1);
 
 	scopy(installdir, pathtofile, 2);
 	strcat(pathtofile, file);

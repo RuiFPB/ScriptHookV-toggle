@@ -3,7 +3,8 @@ WRES = x86_64-w64-mingw32-windres
 
 default: main
 main: main.c #icon
-	$(CXX) -o main main.c main.res -O2
+#   main.res added to the end of the command to include the icon
+	$(CXX) -o main -O2 main.c -Wall
 
 #icon:
 #	$(WRES) main.rc -O coff -o main.res
