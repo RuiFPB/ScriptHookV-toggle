@@ -12,30 +12,26 @@
 #include <string.h> // strcat() e strlen();
 #include <unistd.h> // access() for the file check
 
-#ifdef _WIN32
 #include <windows.h> //SetConsoleOutputCP
-#endif
 
-#define STR_SIZE 300 //Tamanho padrão das strings. O tamanho é ligeiramente exagerado mas assim asseguro que não exista erros mesmo quando o caminho para a instalação do jogo é mais longo.
-		     //Caso seja necessário mais caracteres para que o comando possa ser executado, apenas este valor terá que ser modificado.
 
-#ifdef _WIN32
-char base[STR_SIZE] = "move ";
-#else
-char base[STR_SIZE] = "mv ";
-#endif
+#define STR_SIZE 256
+    //Tamanho padrão das strings. O tamanho é ligeiramente exagerado mas assim asseguro que não exista erros mesmo quando o caminho para a instalação do jogo é mais longo.
+	//Caso seja necessário mais caracteres para que o comando possa ser executado, apenas este valor terá que ser modificado.
 
-char installdir[STR_SIZE] = "";
-char pathtofile[STR_SIZE] = "";
-char npathtofile[STR_SIZE] = "";
-char command[STR_SIZE] = "";
-char file2[12] = "dinput8.dll";
-char file1[16] = "ScriptHookV.dll";
-char disabler[9] = "_disable";
-int opc = 0;
-char inpt[STR_SIZE];
-int end = 0;
-int j = 0;
+
+char base[] = "move ";              // Comando base para mover ficheiros
+char installdir[STR_SIZE] = "";     // Diretório de instalação do jogo
+char pathtofile[STR_SIZE] = "";     // Caminho para o ficheiro
+char npathtofile[STR_SIZE] = "";    // Novo caminho para o ficheiro
+char command[STR_SIZE*2] = "";      // Comando completo
+char file2[] = "dinput8.dll";       // Ficheiro a ser movido
+char file1[] = "ScriptHookV.dll";   // Ficheiro a ser movido
+char disabler[] = "_disable";       // Sufixo para desativar ficheiros
+int opc = 0;                        // Opção escolhida
+char inpt[STR_SIZE];                // Input do utilizador
+int end = 0;                        // Flag para terminar o programa
+int j = 0;                          // Variável temporária
 
 /*
 Copia os conteúdos de s1 para s2
@@ -78,13 +74,10 @@ int status(char path[]){
 
 /*
 Limpa a linha de commandos
+TODO: Encontrar uma forma de limpar a consola sem usar system()
 */
 void clrscr(){
-    #ifdef _WIN32
     system("cls");
-    #else
-    system("clear");
-    #endif
 }
 
 /*
@@ -108,7 +101,7 @@ void toggle(char file[], int mode){
 
 	switch(mode){
 		case 1:		// Desativar
-			command[strlen(command)] = '"';
+			command[strlen(command)] = '"';     // Adiciona aspas ao início e fim do comando para evitar problemas com espaços no caminho
 			strcat(command, pathtofile);
 			command[strlen(command)] = '"';
 
@@ -144,9 +137,7 @@ void toggle(char file[], int mode){
 
 // Função principal
 int main(int argc, char **argv){
-    #ifdef _WIN32
     SetConsoleOutputCP(65001); // Sets the codepage to utf_8 on windows 
-    #endif
 
     if (argc > 1) {
         scopy(argv[1], installdir, 1);
@@ -177,13 +168,9 @@ int main(int argc, char **argv){
                     installdir[strlen (installdir) - 1] = '\0';
             }
             // se o caminho não teminar com \ ou / (dependendo do OS) acrescentar o carecter ao caminho
-            #ifdef _WIN32
             if (installdir[strlen(installdir) - 1] != '\\')
                 installdir[strlen(installdir)] = '\\';
-            #else
-            if (installdir[strlen(installdir) - 1] != '/') // caracter 47 = '/'
-                installdir[strlen(installdir)] = '/';
-            #endif
+            
 
             // gerar o caminho para ScriptHookV.dll
             scopy(installdir, pathtofile, 2);
